@@ -12,10 +12,4 @@
             android:gravity="center"
             android:src="@drawable/logo" /> 
     </item>
-        <item>
-        <bitmap
-            android:gravity="left"
-            android:src="@drawable/logo" /> 
-    </item>
-    <!-- <body>Don't forget me this weekend!</body> -->
 </layer-list>
