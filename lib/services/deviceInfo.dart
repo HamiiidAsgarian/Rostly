@@ -1,14 +1,17 @@
 import 'dart:ui';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:rostly/screens/userModel.dart';
 import 'package:device_info/device_info.dart';
 
 class DeviceInfo {
+  DeviceInfo({@required this.urlVal});
   final windowsWith = window.physicalSize.width;
   final windowsheight = window.physicalSize.height;
+  String urlVal;
 
   Future<UserModel> _deviceInfoSender(String name, String job) async {
-    final String url = 'https://reqres.in/api/users';
+    final String url = urlVal;
     final response = await http.post(url,
         // headers: <String, String>{
         //   'Content-Type': 'application/json; charset=UTF-8',
@@ -39,11 +42,9 @@ class DeviceInfo {
     List info = await deviceInfo();
 
     final UserModel receivedInfo = await _deviceInfoSender(info[0], info[1]);
-    print(receivedInfo.job);
-    print(receivedInfo.name);
+    print("${receivedInfo.job} has posted");
+    print("${receivedInfo.name} has posted");
     // print(user.createdAt);
     // print(user.id);
-
-    // Navigator.pushReplacementNamed(context, "/Gate");
   }
 }
