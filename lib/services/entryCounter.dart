@@ -20,7 +20,7 @@ class EntryCounter {
     // setState(() {
     //   counter = currentNumber;
     // });
-    print("Entry number is $currentNumber");
+    // print("Entry number is $currentNumber");
     return currentNumber;
   }
 }

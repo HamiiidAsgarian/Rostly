@@ -10,6 +10,7 @@ class DeviceInfo {
   final windowsheight = window.physicalSize.height;
   String urlVal;
 
+  // ignore: unused_element
   Future<UserModel> _deviceInfoSender(String name, String job) async {
     final String url = urlVal;
     final response = await http.post(url,
@@ -39,11 +40,12 @@ class DeviceInfo {
   }
 
   respondReceiver() async {
-    List info = await deviceInfo();
+    // List info = await deviceInfo();
 
-    final UserModel receivedInfo = await _deviceInfoSender(info[0], info[1]);
-    print("${receivedInfo.job} has posted");
-    print("${receivedInfo.name} has posted");
+    // final UserModel receivedInfo = await _deviceInfoSender(info[0], info[1]);
+    // print("${receivedInfo.job} has posted");
+    // print("${receivedInfo.name} has posted");
+
     // print(user.createdAt);
     // print(user.id);
   }

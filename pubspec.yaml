@@ -31,6 +31,8 @@ dependencies:
   http: ^0.12.2
   device_info: '>=0.4.0 <2.0.0'
   shared_preferences: '>=0.5.1 <2.0.0'
+  video_player: ^0.10.12+2
+  chewie: ^0.9.10
 
 
 dev_dependencies:
