@@ -33,6 +33,8 @@ dependencies:
   shared_preferences: '>=0.5.1 <2.0.0'
   video_player: ^0.10.12+2
   chewie: ^0.9.10
+  flutter_icons: ^1.1.0
+  # custom_chewie: ^0.7.0
 
 
 dev_dependencies:
