@@ -5,6 +5,8 @@ import 'package:rostly/services/entryCounter.dart';
 import 'package:rostly/services/player.dart';
 import 'package:video_player/video_player.dart';
 
+import '../fakeData.dart';
+
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -41,11 +43,11 @@ class _SplashScreenState extends State<SplashScreen> {
   final DeviceInfo myDevice =
       new DeviceInfo(urlVal: 'https://reqres.in/api/users');
 
-  List a = [
-    "https://static.videezy.com/system/resources/previews/000/033/549/original/szene10.mp4",
-    "https://static.videezy.com/system/resources/previews/000/037/964/original/baby_dog13.mp4",
-    "https://static.videezy.com/system/resources/previews/000/049/581/original/testtube.mp4"
-  ];
+  // List a = [
+  //   "https://static.videezy.com/system/resources/previews/000/033/549/original/szene10.mp4",
+  //   "https://static.videezy.com/system/resources/previews/000/037/964/original/baby_dog13.mp4",
+  //   "https://static.videezy.com/system/resources/previews/000/049/581/original/testtube.mp4"
+  // ];
   // String myUrld =
   //     "https://static.videezy.com/system/resources/previews/000/049/581/original/testtube.mp4";
 
@@ -77,7 +79,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> ttt = videoLister(a);
+    List<Widget> ttt = videoLister(linksArray);
     myDevice.respondReceiver();
     return Scaffold(
       backgroundColor: kPink,
