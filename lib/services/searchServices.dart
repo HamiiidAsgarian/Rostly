@@ -20,7 +20,7 @@ class SearchServices {
     if (response.statusCode == 201) {
       final String responseString = response.body;
       var finalUserModelRespond = searchUserModelFromJson(responseString);
-      // print(finalUserModelRespond.dialogs);
+      // print(finalUserModelRespond.scenes);
       return finalUserModelRespond;
     } else
       return null;
@@ -30,8 +30,8 @@ class SearchServices {
     // List info = await deviceInfo();
 
     final UserModel receivedInfo = await keywordSender(keyWord);
-    // print(receivedInfo.dialogs);
-    return (receivedInfo.dialogs);
+    // print(receivedInfo.scenes);
+    return (receivedInfo.scenes);
     // print("${receivedInfo.job} has posted");
     // print("${receivedInfo.name} has posted");
 
@@ -52,26 +52,26 @@ String userModelToJson(UserModel data) => json.encode(data.toJson());
 
 class UserModel {
   UserModel({
-    this.dialogs,
+    this.scenes,
     // this.job,
     // this.id,
     // this.createdAt,
   });
 
-  List dialogs;
+  List scenes;
   // String job;
   // String id;
   // DateTime createdAt;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-        dialogs: json["dialogs"],
+        scenes: json["scenes"],
         // job: json["job"],
         // id: json["id"],
         // createdAt: DateTime.parse(json["createdAt"]),
       );
 
   Map<String, dynamic> toJson() => {
-        "dialogs": dialogs,
+        "scenes": scenes,
         // "job": job,
         // "id": id,
         // "createdAt": createdAt.toIso8601String(),

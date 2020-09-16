@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:rostly/screens/gateScreen.dart';
-import 'package:rostly/screens/searchScreen.dart';
+import 'package:rostly/screens/splashScreen.dart';
+import 'package:rostly/services/originalPlayer.dart';
 // import 'package:rostly/screens/splashScreen.dart';
 
 main() {
@@ -15,8 +15,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.dark(),
       initialRoute: "/",
       routes: {
-        "/": (context) => SearchScreen(),
-        "/Gate": (context) => GateScreen(),
+        "/": (context) => VideoPlayerApp()
+        // SearchScreen(),
+        ,
+        "/Gate": (context) => SplashScreen(),
       },
       debugShowCheckedModeBanner: false,
       // home: SplashScreen(),

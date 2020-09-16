@@ -6,6 +6,8 @@ import 'package:rostly/services/searchServices.dart';
 import 'package:rostly/widgets/MyWidgets.dart';
 
 import '../consts.dart';
+import 'package:rostly/services/player.dart';
+import 'package:video_player/video_player.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -13,11 +15,77 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  String _videoPlayerURL =
+      "https://static.videezy.com/system/resources/previews/000/049/581/original/testtube.mp4";
+  UniqueKey _urlKey;
+
   @override
   void initState() {
     super.initState();
   }
 
+  List<Widget> dialogList = [];
+  void changeUrl(String newUrl) async {
+    this.setState(() {
+      _videoPlayerURL = newUrl;
+      _urlKey = UniqueKey();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color.fromRGBO(17, 17, 17, 1),
+      body: ListView(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                flex: 3,
+                child: TextFieldNetflix(
+                  onChanged: (e) {
+                    print(e);
+                  },
+                ),
+              ),
+              Expanded(
+                  flex: 1,
+                  child: FlatButtonNetflixRed(
+                    onPress: () async {
+                      final SearchServices myHTTPsearchService =
+                          new SearchServices(
+                              url: htmlRequestsUrl + "/rostly/v1/dialogs");
+                      var respondedDialogs =
+                          await myHTTPsearchService.respondReceiver("keyword");
+                      var a = dialogsMapper(respondedDialogs);
+                      // print(a);
+                      setState(() {
+                        dialogList = a;
+                      });
+                    },
+                  ))
+            ],
+          ),
+          Player(
+            videoPlayerController:
+                VideoPlayerController.network(_videoPlayerURL),
+            newKey: _urlKey,
+          ),
+          Card(
+            color: kBackgroundBlack,
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 5),
+              child: Column(
+                children: dialogList,
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  ////////////////////////////////////////////////// dialog widget creator function
   List<Widget> dialogsMapper(dialogs) {
     List<Widget> dialogsTitle = [];
 
@@ -43,82 +111,25 @@ class _SearchScreenState extends State<SearchScreen> {
             children: [
               GestureDetector(
                   onTap: () {
-                    print(dialog['sentence']);
+                    changeUrl(dialog['URL']);
+                    print(dialog['URL']);
                   },
                   child: Icon(FontAwesome5Solid.play_circle)),
               SizedBox(
                 width: 5,
               ),
               Expanded(
-                child: Text(dialog['sentence'],
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.left,
-                    // ignore: deprecated_member_use
-                    style: Theme.of(context).textTheme.subhead),
+                child: Text(
+                  dialog['sentence'],
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.left,
+                  // ignore: deprecated_member_use
+                  // style: Theme.of(context).textTheme.subhead
+                ),
               ),
             ]),
       ));
     }
     return dialogsTitle;
-  }
-
-  List<Widget> dialogList = [];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color.fromRGBO(17, 17, 17, 1),
-      body: ListView(
-        // mainAxisAlignment: MainAxisAlignment.center,
-        // crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                flex: 3,
-                child: TextFieldNetflix(
-                  onChanged: (e) {
-                    print(e);
-                  },
-                ),
-              ),
-              Expanded(
-                  flex: 1,
-                  child: FlatButtonNetflixRed(
-                    onPress: () async {
-                      final SearchServices myHTTPsearchService =
-                          new SearchServices(
-                              url: htmlRequestsUrl + "/rostly/v1/dialogs");
-                      // print(htmlRequestsUrl + "/rostly/v1/dialogs");
-                      var respondedDialogs =
-                          await myHTTPsearchService.respondReceiver("keyword");
-                      print(respondedDialogs[0]['sentence']);
-                      print(respondedDialogs.runtimeType);
-                      print(dialogList.runtimeType);
-
-                      var a = dialogsMapper(respondedDialogs);
-                      print(a);
-                      setState(() {
-                        dialogList = a;
-                      });
-
-                      // myHTTPsearchService.respondReceiver("sssss");
-                      // print("aaaa");
-                    },
-                  ))
-            ],
-          ),
-          Card(
-            color: kBackgroundBlack,
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 5),
-              child: Column(
-                children: dialogList,
-              ),
-            ),
-          )
-        ],
-      ),
-    );
   }
 }
