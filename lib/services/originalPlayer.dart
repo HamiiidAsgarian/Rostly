@@ -62,49 +62,82 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
       child: Column(children: [
         Expanded(
           flex: 1,
-          child: Stack(fit: StackFit.loose, children: [
-            Center(
-              child: GestureDetector(
-                onTap: () {
-                  print(videoOptionsVisibility);
-                  setState(() {
-                    videoOptionsVisibility = !videoOptionsVisibility;
-                  });
-                  print(videoOptionsVisibility);
-                },
-                child: PlayerScreen(
-                    initializeVideoPlayerFuture: _initializeVideoPlayerFuture,
-                    controller: _controller),
+          child: SizedBox(
+            // width: 200,
+            child: Stack(fit: StackFit.loose, children: [
+              Center(
+                child: GestureDetector(
+                  onTap: () {
+                    print(videoOptionsVisibility);
+                    setState(() {
+                      videoOptionsVisibility = !videoOptionsVisibility;
+                    });
+                    print(videoOptionsVisibility);
+                  },
+                  child: PlayerScreen(
+                      initializeVideoPlayerFuture: _initializeVideoPlayerFuture,
+                      controller: _controller),
+                ),
               ),
-            ),
-            Align(
-              alignment: Alignment.center,
-              child: Visibility(
-                visible: videoOptionsVisibility,
-                child: PlayerOptions(
-                    controller: _controller,
-                    function: () {
-                      setState(() {
-                        videoOptionsVisibility = !videoOptionsVisibility;
-                      });
-                    }),
+              Align(
+                alignment: Alignment.center,
+                child: Visibility(
+                  visible: videoOptionsVisibility,
+                  child: PlayerOptions(
+                      controller: _controller,
+                      function: () {
+                        setState(() {
+                          videoOptionsVisibility = !videoOptionsVisibility;
+                        });
+                      }),
+                ),
               ),
-            ),
-            RaisedButton(onPressed: () {
-              _controller.setLooping(true);
-            }),
-            Positioned(
-              right: 0,
-              bottom: 0,
-              // alignment: Alignment.centerRight,
-              child: VolumeSlider(
-                controller: _controller,
+
+              Positioned.fill(
+                bottom: 0,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        height: 50,
+                        color: Colors.red.withOpacity(0.8),
+                        child: VolumeSlider(
+                          controller: _controller,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Container(
+                        child: ProgressSlider(
+                          controller: _controller,
+                        ),
+                        height: 50,
+                        color: Colors.green.withOpacity(0.8),
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ),
-            ProgressSlider(
-              controller: _controller,
-            ),
-          ]),
+              // Positioned.fill(
+              //   bottom: 0,
+              //   child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+              //     Expanded(
+              //       child: ProgressSlider(
+              //         controller: _controller,
+              //       ),
+              //     ),
+              //     Expanded(
+              //       child: ProgressSlider(
+              //         controller: _controller,
+              //       ),
+              //     ),
+              //   ]),
+              // ),
+            ]),
+          ),
         ),
         Expanded(
           flex: 1,

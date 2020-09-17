@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+// import 'package:flutter_icons/flutter_icons.dart';
 import 'package:video_player/video_player.dart';
 
 class PlayerOptions extends StatefulWidget {
@@ -14,73 +14,75 @@ class _PlayerOptionsState extends State<PlayerOptions> {
   @override
   Widget build(BuildContext context) {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-      FlatButton(
-        onPressed: () {
-          // if (widget.controller.value.isPlaying == true) {
-          //   widget.controller.pause();
-          // } else {
-          //   widget.controller.play();
-          // }
-          widget.function();
-          setState(() {});
-        },
-        child: ClipOval(
-          child: Container(
-            width: 60,
-            height: 60,
-            color: Colors.blue.withOpacity(0.5),
-            child: (widget.controller.value.isPlaying == true)
-                ? Icon(Icons.pause, color: Colors.white)
-                : Icon(
-                    Icons.skip_previous,
-                    color: Colors.white,
-                  ),
+      Container(
+        width: 60,
+        height: 60,
+        child: FlatButton(
+          color: Colors.blue.withOpacity(0.8),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          onPressed: () {
+            // if (widget.controller.value.isPlaying == true) {
+            //   widget.controller.pause();
+            // } else {
+            //   widget.controller.play();
+            // }
+            widget.function();
+            setState(() {});
+          },
+          child: Icon(
+            Icons.skip_previous,
+            color: Colors.white,
           ),
         ),
       ),
-      FlatButton(
-        onPressed: () {
-          if (widget.controller.value.isPlaying == true) {
-            widget.controller.pause();
-          } else {
-            widget.controller.play();
-          }
-          setState(() {});
-        },
-        child: ClipOval(
-          child: Container(
-            width: 60,
-            height: 60,
-            color: Colors.blue.withOpacity(0.5),
-            child: (widget.controller.value.isPlaying == true)
-                ? Icon(Icons.pause, color: Colors.white)
-                : Icon(
-                    Icons.play_arrow,
-                    color: Colors.white,
-                  ),
-          ),
+      Container(
+        width: 80,
+        height: 80,
+        child: FlatButton(
+          // materialTapTargetSize: MaterialTapTargetSize(),
+          color: Colors.blue.withOpacity(0.8),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+          onPressed: () {
+            if (widget.controller.value.isPlaying == true) {
+              widget.controller.pause();
+            } else {
+              widget.controller.play();
+            }
+            setState(() {});
+          },
+          child: (widget.controller.value.isPlaying == true)
+              ? Icon(Icons.pause, color: Colors.white)
+              : Icon(
+                  Icons.play_arrow,
+                  color: Colors.white,
+                ),
         ),
       ),
-      FlatButton(
-        onPressed: () {
-          if (widget.controller.value.isPlaying == true) {
-            widget.controller.pause();
-          } else {
-            widget.controller.play();
-          }
-          setState(() {});
-        },
-        child: ClipOval(
-          child: Container(
-            width: 60,
-            height: 60,
-            color: Colors.blue.withOpacity(0.5),
-            child: (widget.controller.value.isPlaying == true)
-                ? Icon(MaterialIcons.pause, color: Colors.white)
-                : Icon(
-                    MaterialIcons.skip_next,
-                    color: Colors.white,
-                  ),
+      Container(
+        width: 60,
+        height: 60,
+        child: FlatButton(
+          color: Colors.blue.withOpacity(0.8),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          onPressed: () {
+            // if (widget.controller.value.isPlaying == true) {
+            //   widget.controller.pause();
+            // } else {
+            //   widget.controller.play();
+            // }
+            widget.function();
+            setState(() {});
+          },
+          child: Icon(
+            Icons.skip_next,
+            color: Colors.white,
           ),
         ),
       ),
@@ -162,46 +164,35 @@ class _ProgressSliderState extends State<ProgressSlider> {
       valueListenable: widget.controller,
       builder: (context, VideoPlayerValue value, child) {
         print((value.position.hashCode / 1000000).round());
-        return Align(
-          alignment: Alignment.bottomLeft,
-          child: Container(
-            height: 20,
-            // width: 500,
-            color: Colors.blue.withOpacity(0.2),
-            child: Row(children: [
-              Slider(
-                // value: _controller.value.position.hashCode.round() / 1000000,
-                // value: _currentSliderValue,
-                value:
-                    widget.controller.value.position.hashCode.round() / 1000000,
-                min: 0,
-                max: widget.controller.value.duration.hashCode / 1000000,
-                divisions: (1000),
-                label: _currentSliderValueDuration.toString().split('.')[0],
-                onChangeStart: (e) {
-                  setState(() {
-                    sliderValueStaus = "changing";
-                  });
-                },
-                onChanged: (double e) {
-                  setState(() {
-                    // _currentSliderValue = e;
-                    _currentSliderValueDuration = secondToDuration(e);
-                    Duration destinationTime = secondToDuration(e);
-                    widget.controller.seekTo(destinationTime);
-                  });
-                },
-                onChangeEnd: (e) {
-                  setState(() {
-                    // _currentSliderValue = e;
-                  });
-                  Duration destinationTime = secondToDuration(e);
-                  widget.controller.seekTo(destinationTime);
-                  widget.controller.play();
-                },
-              ),
-            ]),
-          ),
+        return Slider(
+          // value: _controller.value.position.hashCode.round() / 1000000,
+          // value: _currentSliderValue,
+          value: widget.controller.value.position.hashCode.round() / 1000000,
+          min: 0,
+          max: widget.controller.value.duration.hashCode / 1000000,
+          divisions: (1000),
+          label: _currentSliderValueDuration.toString().split('.')[0],
+          onChangeStart: (e) {
+            setState(() {
+              sliderValueStaus = "changing";
+            });
+          },
+          onChanged: (double e) {
+            setState(() {
+              // _currentSliderValue = e;
+              _currentSliderValueDuration = secondToDuration(e);
+              Duration destinationTime = secondToDuration(e);
+              widget.controller.seekTo(destinationTime);
+            });
+          },
+          onChangeEnd: (e) {
+            setState(() {
+              // _currentSliderValue = e;
+            });
+            Duration destinationTime = secondToDuration(e);
+            widget.controller.seekTo(destinationTime);
+            widget.controller.play();
+          },
         );
       },
     );
