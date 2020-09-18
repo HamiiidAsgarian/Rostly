@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:rostly/widgets/originalPlayerWidgets.dart';
 import 'package:video_player/video_player.dart';
 
@@ -39,6 +40,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     _initializeVideoPlayerFuture = _controller.initialize();
     // Use the controller to loop the video.
     _controller.setLooping(true);
+    // _controller.initialize();
+
     setState(() {});
 
     super.initState();
@@ -92,50 +95,10 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                       }),
                 ),
               ),
-
               Positioned.fill(
                 bottom: 0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    Expanded(
-                      child: Container(
-                        height: 50,
-                        color: Colors.red.withOpacity(0.8),
-                        child: VolumeSlider(
-                          controller: _controller,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 3,
-                      child: Container(
-                        child: ProgressSlider(
-                          controller: _controller,
-                        ),
-                        height: 50,
-                        color: Colors.green.withOpacity(0.8),
-                      ),
-                    )
-                  ],
-                ),
+                child: PlayerOptionsBar(controller: _controller),
               ),
-              // Positioned.fill(
-              //   bottom: 0,
-              //   child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-              //     Expanded(
-              //       child: ProgressSlider(
-              //         controller: _controller,
-              //       ),
-              //     ),
-              //     Expanded(
-              //       child: ProgressSlider(
-              //         controller: _controller,
-              //       ),
-              //     ),
-              //   ]),
-              // ),
             ]),
           ),
         ),
@@ -147,6 +110,94 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         ),
       ]),
     ));
+  }
+}
+//////////////////**************************************////////////////////////// */
+
+class PlayerOptionsBar extends StatelessWidget {
+  const PlayerOptionsBar({
+    Key key,
+    @required VideoPlayerController controller,
+  })  : _controller = controller,
+        super(key: key);
+
+  final VideoPlayerController _controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: <Widget>[
+        Container(
+          color: Colors.orange,
+          width: 50,
+          height: 50,
+          child: Icon(
+            Icons.play_arrow,
+            color: Colors.white,
+          ),
+        ),
+        Expanded(
+          flex: 5,
+          child: Container(
+            child: ProgressSlider(
+              controller: _controller,
+            ),
+            height: 50,
+            color: Colors.green.withOpacity(0.8),
+          ),
+        ),
+        Container(
+          color: Colors.amber,
+          width: 50,
+          height: 50,
+          child: GestureDetector(
+            onTap: () {
+              print(SystemChrome.restoreSystemUIOverlays());
+              SystemChrome.setPreferredOrientations([
+                DeviceOrientation.landscapeRight,
+                DeviceOrientation.landscapeLeft,
+              ]);
+            },
+            child: Icon(
+              Icons.fullscreen,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        Container(
+          color: Colors.pink,
+          width: 50,
+          height: 50,
+          child: Icon(
+            Icons.loop,
+            color: Colors.white,
+          ),
+        ),
+        Container(
+          width: 50,
+          height: 180,
+          color: Colors.red.withOpacity(0.8),
+          child: Column(children: [
+            Expanded(
+              child: VolumeSlider(
+                controller: _controller,
+              ),
+            ),
+            Container(
+              color: Colors.blue,
+              width: double.infinity,
+              height: 50,
+              child: Icon(
+                Icons.volume_up,
+                color: Colors.white,
+              ),
+            ),
+          ]),
+        ),
+      ],
+    );
   }
 }
 

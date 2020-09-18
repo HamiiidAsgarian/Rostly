@@ -1,11 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:rostly/screens/splashScreen.dart';
 import 'package:rostly/services/originalPlayer.dart';
 // import 'package:rostly/screens/splashScreen.dart';
 
-main() {
+void main() {
+  // WidgetsFlutterBinding.ensureInitialized();
+  // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+  //     .then((_) {
   runApp(MyApp());
+  // });
 }
 
 class MyApp extends StatelessWidget {
