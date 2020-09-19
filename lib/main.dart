@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+// import 'package:flutter/services.dart';
 import 'package:rostly/screens/splashScreen.dart';
+// import 'package:rostly/screens/videoFullScreen.dart';
 import 'package:rostly/services/originalPlayer.dart';
 // import 'package:rostly/screens/splashScreen.dart';
 
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.dark(),
       initialRoute: "/",
       routes: {
-        "/": (context) => VideoPlayerApp()
+        "/": (context) => VideoPlayerScreen()
         // SearchScreen(),
         ,
         "/Gate": (context) => SplashScreen(),

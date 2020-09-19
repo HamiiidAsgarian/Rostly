@@ -1,29 +1,40 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:rostly/screens/videoFullScreen.dart';
+// import 'package:rostly/screens/videoFullScreen.dart';
+import 'package:rostly/services/originalPlayer.dart';
 import 'package:rostly/widgets/originalPlayerWidgets.dart';
 import 'package:video_player/video_player.dart';
 
-class VideoPlayerScreen extends StatefulWidget {
-  VideoPlayerScreen({Key key}) : super(key: key);
+// class VideoPlayerApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Video Player Demo',
+//       home: VideoFullScreen(),
+//     );
+//   }
+// }
+
+class VideoFullScreen extends StatefulWidget {
+  VideoFullScreen({Key key}) : super(key: key);
   @override
-  _VideoPlayerScreenState createState() => _VideoPlayerScreenState();
+  _VideoFullScreenState createState() => _VideoFullScreenState();
 }
 
-class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
+class _VideoFullScreenState extends State<VideoFullScreen> {
   VideoPlayerController _controller;
   Future<void> _initializeVideoPlayerFuture;
-  List<String> urls = [
-    "https://static.videezy.com/system/resources/previews/000/033/549/original/szene10.mp4",
-    "http://techslides.com/demos/sample-videos/small.webm",
-    "https://static.videezy.com/system/resources/previews/000/049/581/original/testtube.mp4"
-  ];
+  // double hourInseconds = 0;
+  // double minutesInSeconds = 0;
+  // double seconds = 0;
+  // double totalSeconds = 0;
 
   @override
   void initState() {
     SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
     ]);
 
     // Create and store the VideoPlayerController. The VideoPlayerController
@@ -59,11 +70,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         body: Visibility(
       // visible: ,
       child: SizedBox(
-        width: 300,
-        height: 300,
-        child: Stack(overflow: Overflow.clip, fit: StackFit.loose, children: [
-          Align(
-            alignment: Alignment.center,
+        // width: 200,
+        child: Stack(fit: StackFit.loose, children: [
+          Center(
             child: GestureDetector(
               onTap: () {
                 print(videoOptionsVisibility);
@@ -82,19 +91,12 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
             child: Visibility(
               visible: videoOptionsVisibility,
               child: PlayerOptions(
-                controller: _controller,
-                functionPrevious: () {
-                  print("previous");
-                },
-                function: () {
-                  setState(() {
-                    videoOptionsVisibility = !videoOptionsVisibility;
-                  });
-                },
-                functionNext: () {
-                  print("next");
-                },
-              ),
+                  controller: _controller,
+                  function: () {
+                    setState(() {
+                      videoOptionsVisibility = !videoOptionsVisibility;
+                    });
+                  }),
             ),
           ),
           Positioned.fill(
@@ -153,8 +155,8 @@ class PlayerOptionsBar extends StatelessWidget {
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (BuildContext context) => VideoFullScreen()));
-              // SystemChrome.setPreferredOrientations([
+                      builder: (BuildContext context) =>
+                          VideoPlayerScreen())); // SystemChrome.setPreferredOrientations([
               //   DeviceOrientation.landscapeRight,
               //   DeviceOrientation.landscapeLeft,
               // ]);

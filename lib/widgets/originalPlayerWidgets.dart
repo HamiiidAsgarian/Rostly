@@ -3,9 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 class PlayerOptions extends StatefulWidget {
-  PlayerOptions({this.controller, this.function});
+  PlayerOptions(
+      {this.controller,
+      this.function,
+      this.functionNext,
+      this.functionPrevious});
   final controller;
   final Function function;
+  final Function functionNext;
+  final Function functionPrevious;
+
   @override
   _PlayerOptionsState createState() => _PlayerOptionsState();
 }
@@ -29,7 +36,7 @@ class _PlayerOptionsState extends State<PlayerOptions> {
             // } else {
             //   widget.controller.play();
             // }
-            widget.function();
+            widget.functionPrevious();
             setState(() {});
           },
           child: Icon(
@@ -77,7 +84,7 @@ class _PlayerOptionsState extends State<PlayerOptions> {
             // } else {
             //   widget.controller.play();
             // }
-            widget.function();
+            widget.functionNext();
             setState(() {});
           },
           child: Icon(
@@ -99,7 +106,7 @@ class VolumeSlider extends StatefulWidget {
 }
 
 class _VolumeSliderState extends State<VolumeSlider> {
-  double volumeValue = 0.5;
+  double volumeValue = 0.1;
   @override
   Widget build(BuildContext context) {
     return RotatedBox(
