@@ -19,7 +19,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     "http://techslides.com/demos/sample-videos/small.webm",
     "https://static.videezy.com/system/resources/previews/000/049/581/original/testtube.mp4"
   ];
-
   @override
   void initState() {
     SystemChrome.setPreferredOrientations([
@@ -30,7 +29,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     // offers several different constructors to play videos from assets, files,
     // or the internet.
     _controller = VideoPlayerController.network(
-      "http://techslides.com/demos/sample-videos/small.webm",
+      urls[0],
     );
     // Initialize the controller and store the Future for later use.
     _initializeVideoPlayerFuture = _controller.initialize();
@@ -59,7 +58,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         body: Visibility(
       // visible: ,
       child: SizedBox(
-        width: 300,
+        width: 400,
         height: 300,
         child: Stack(overflow: Overflow.clip, fit: StackFit.loose, children: [
           Align(
