@@ -150,7 +150,7 @@ class PlayerOptionsBar extends StatelessWidget {
           height: 50,
           child: GestureDetector(
             onTap: () {
-              print(SystemChrome.restoreSystemUIOverlays());
+              // print(SystemChrome.restoreSystemUIOverlays());
 
               Navigator.push(
                   context,

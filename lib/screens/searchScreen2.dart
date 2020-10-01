@@ -16,19 +16,25 @@ class SearchScreen2 extends StatefulWidget {
 }
 
 class _SearchScreen2State extends State<SearchScreen2> {
+  List<Widget> dialogList = [];
+  List respondedDialogsList = [];
+
   String _videoPlayerURL =
       "https://static.videezy.com/system/resources/previews/000/049/581/original/testtube.mp4";
   UniqueKey _urlKey;
-
+  var currentVideoItem;
   @override
   void initState() {
     super.initState();
   }
 
-  List<Widget> dialogList = [];
-  void changeUrl(String newUrl) async {
+  void changeUrl(var item) async {
+    print(
+        "current item is ${item["id"]} out of ${respondedDialogsList.length - 1}");
+
     this.setState(() {
-      _videoPlayerURL = newUrl;
+      currentVideoItem = item;
+      _videoPlayerURL = item['URL'];
       _urlKey = UniqueKey();
     });
   }
@@ -36,6 +42,7 @@ class _SearchScreen2State extends State<SearchScreen2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       backgroundColor: Color.fromRGBO(17, 17, 17, 1),
       body: SafeArea(
         child: Column(children: [
@@ -48,7 +55,8 @@ class _SearchScreen2State extends State<SearchScreen2> {
                     flex: 3,
                     child: TextFieldNetflix(
                       onChanged: (e) {
-                        print(e);
+                        // print(respondedDialogsList[0]);
+                        // print(_videoPlayerURL);
                       },
                     ),
                   ),
@@ -61,10 +69,13 @@ class _SearchScreen2State extends State<SearchScreen2> {
                                   url: htmlRequestsUrl + "/rostly/v1/dialogs");
                           var respondedDialogs = await myHTTPsearchService
                               .respondReceiver("keyword");
+
                           var a = dialogsMapper(respondedDialogs);
                           // print(a);
                           setState(() {
+                            respondedDialogsList = respondedDialogs;
                             dialogList = a;
+                            currentVideoItem = respondedDialogs[0];
                           });
                         },
                       ))
@@ -76,6 +87,16 @@ class _SearchScreen2State extends State<SearchScreen2> {
               ),
             ],
           )),
+          RaisedButton(onPressed: () {
+            if (int.parse(currentVideoItem['id']) <
+                respondedDialogsList.length - 1) {
+              setState(() {
+                changeUrl(
+                  respondedDialogsList[int.parse(currentVideoItem['id']) + 1],
+                );
+              });
+            }
+          }),
           Expanded(
             child: ListView(
               children: [
@@ -127,8 +148,9 @@ class _SearchScreen2State extends State<SearchScreen2> {
             children: [
               GestureDetector(
                   onTap: () {
-                    changeUrl(dialog['URL']);
-                    print(dialog['URL']);
+                    // print(dialog);
+                    changeUrl(dialog);
+                    // print(dialog['URL']);
                   },
                   child: Icon(FontAwesome5Solid.play_circle)),
               SizedBox(
