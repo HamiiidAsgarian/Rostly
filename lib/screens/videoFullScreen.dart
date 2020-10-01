@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // import 'package:rostly/screens/videoFullScreen.dart';
-import 'package:rostly/services/originalPlayer.dart';
+// import 'package:rostly/services/originalPlayer.dart';
 import 'package:rostly/widgets/originalPlayerWidgets.dart';
 import 'package:video_player/video_player.dart';
 
@@ -17,7 +17,8 @@ import 'package:video_player/video_player.dart';
 // }
 
 class VideoFullScreen extends StatefulWidget {
-  VideoFullScreen({Key key}) : super(key: key);
+  final String url;
+  VideoFullScreen({this.url, Key key}) : super(key: key);
   @override
   _VideoFullScreenState createState() => _VideoFullScreenState();
 }
@@ -41,7 +42,7 @@ class _VideoFullScreenState extends State<VideoFullScreen> {
     // offers several different constructors to play videos from assets, files,
     // or the internet.
     _controller = VideoPlayerController.network(
-      "http://techslides.com/demos/sample-videos/small.webm",
+      widget.url,
     );
     // Initialize the controller and store the Future for later use.
     _initializeVideoPlayerFuture = _controller.initialize();
@@ -57,6 +58,10 @@ class _VideoFullScreenState extends State<VideoFullScreen> {
   @override
   void dispose() {
     // Ensure disposing of the VideoPlayerController to free up resources.
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+
     _controller.dispose();
     super.dispose();
   }
@@ -151,15 +156,15 @@ class PlayerOptionsBar extends StatelessWidget {
           child: GestureDetector(
             onTap: () {
               print(SystemChrome.restoreSystemUIOverlays());
-
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                          VideoPlayerScreen())); // SystemChrome.setPreferredOrientations([
-              //   DeviceOrientation.landscapeRight,
-              //   DeviceOrientation.landscapeLeft,
-              // ]);
+              Navigator.pop(context);
+              // Navigator.pushReplacement(
+              //     context,
+              //     MaterialPageRoute(
+              //         builder: (BuildContext context) =>
+              //             VideoPlayerScreen())); // SystemChrome.setPreferredOrientations([
+              // //   DeviceOrientation.landscapeRight,
+              // //   DeviceOrientation.landscapeLeft,
+              // // ]);
             },
             child: Icon(
               Icons.fullscreen,

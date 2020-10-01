@@ -6,7 +6,10 @@ import 'package:rostly/widgets/originalPlayerWidgets.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPlayerScreen extends StatefulWidget {
-  VideoPlayerScreen({Key key}) : super(key: key);
+  final String url;
+  // final UniqueKey uniqueKey;
+
+  VideoPlayerScreen({this.url, Key key}) : super(key: key);
   @override
   _VideoPlayerScreenState createState() => _VideoPlayerScreenState();
 }
@@ -29,7 +32,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     // offers several different constructors to play videos from assets, files,
     // or the internet.
     _controller = VideoPlayerController.network(
-      urls[0],
+      widget.url,
     );
     // Initialize the controller and store the Future for later use.
     _initializeVideoPlayerFuture = _controller.initialize();
@@ -54,68 +57,68 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Visibility(
-      // visible: ,
-      child: SizedBox(
-        width: 400,
-        height: 300,
-        child: Stack(overflow: Overflow.clip, fit: StackFit.loose, children: [
-          Align(
-            alignment: Alignment.center,
-            child: GestureDetector(
-              onTap: () {
-                print(videoOptionsVisibility);
+    return SizedBox(
+      width: 400,
+      height: 250,
+      child: Stack(overflow: Overflow.clip, fit: StackFit.loose, children: [
+        Align(
+          alignment: Alignment.center,
+          child: GestureDetector(
+            onTap: () {
+              print(videoOptionsVisibility);
+              setState(() {
+                videoOptionsVisibility = !videoOptionsVisibility;
+              });
+              print(videoOptionsVisibility);
+            },
+            child: PlayerScreen(
+                initializeVideoPlayerFuture: _initializeVideoPlayerFuture,
+                controller: _controller),
+          ),
+        ),
+        Align(
+          alignment: Alignment.center,
+          child: Visibility(
+            visible: videoOptionsVisibility,
+            child: PlayerOptions(
+              controller: _controller,
+              functionPrevious: () {
+                print("previous");
+              },
+              function: () {
                 setState(() {
                   videoOptionsVisibility = !videoOptionsVisibility;
                 });
-                print(videoOptionsVisibility);
               },
-              child: PlayerScreen(
-                  initializeVideoPlayerFuture: _initializeVideoPlayerFuture,
-                  controller: _controller),
+              functionNext: () {
+                print("next");
+              },
             ),
           ),
-          Align(
-            alignment: Alignment.center,
-            child: Visibility(
-              visible: videoOptionsVisibility,
-              child: PlayerOptions(
-                controller: _controller,
-                functionPrevious: () {
-                  print("previous");
-                },
-                function: () {
-                  setState(() {
-                    videoOptionsVisibility = !videoOptionsVisibility;
-                  });
-                },
-                functionNext: () {
-                  print("next");
-                },
-              ),
-            ),
+        ),
+        Positioned.fill(
+          bottom: 0,
+          child: PlayerOptionsBar(
+            controller: _controller,
+            url: widget.url,
           ),
-          Positioned.fill(
-            bottom: 0,
-            child: PlayerOptionsBar(controller: _controller),
-          ),
-        ]),
-      ),
-    ));
+        ),
+      ]),
+    );
   }
 }
 //////////////////**************************************////////////////////////// */
 
 class PlayerOptionsBar extends StatelessWidget {
   const PlayerOptionsBar({
+    this.url,
     Key key,
     @required VideoPlayerController controller,
   })  : _controller = controller,
         super(key: key);
 
   final VideoPlayerController _controller;
-
+  final String url;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -149,10 +152,12 @@ class PlayerOptionsBar extends StatelessWidget {
             onTap: () {
               print(SystemChrome.restoreSystemUIOverlays());
 
-              Navigator.pushReplacement(
+              Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (BuildContext context) => VideoFullScreen()));
+                      builder: (BuildContext context) => VideoFullScreen(
+                            url: url,
+                          )));
               // SystemChrome.setPreferredOrientations([
               //   DeviceOrientation.landscapeRight,
               //   DeviceOrientation.landscapeLeft,
