@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:rostly/screens/videoFullScreen.dart';
 import 'package:rostly/widgets/originalPlayerWidgets.dart';
 import 'package:video_player/video_player.dart';
@@ -18,9 +19,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   VideoPlayerController _controller;
   Future<void> _initializeVideoPlayerFuture;
   List<String> urls = [
-    "https://static.videezy.com/system/resources/previews/000/033/549/original/szene10.mp4",
-    "http://techslides.com/demos/sample-videos/small.webm",
-    "https://static.videezy.com/system/resources/previews/000/049/581/original/testtube.mp4"
+    // "https://static.videezy.com/system/resources/previews/000/033/549/original/szene10.mp4",
+    // "http://techslides.com/demos/sample-videos/small.webm",
+    // "https://static.videezy.com/system/resources/previews/000/049/581/original/testtube.mp4"
   ];
   @override
   void initState() {
@@ -38,6 +39,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     _initializeVideoPlayerFuture = _controller.initialize();
     // Use the controller to loop the video.
     _controller.setLooping(true);
+    _controller.pause();
     // _controller.initialize();
 
     setState(() {});
@@ -53,7 +55,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   }
 
   // double volumeValue = 2;
-  bool videoOptionsVisibility = true;
+  bool videoOptionsVisibility = false;
+  bool looping = true;
 
   @override
   Widget build(BuildContext context) {
@@ -144,39 +147,39 @@ class PlayerOptionsBar extends StatelessWidget {
             color: Colors.green.withOpacity(0.8),
           ),
         ),
-        Container(
-          color: Colors.amber,
-          width: 50,
-          height: 50,
-          child: GestureDetector(
-            onTap: () {
-              // print(SystemChrome.restoreSystemUIOverlays());
-
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => VideoFullScreen(
-                            url: url,
-                          )));
-              // SystemChrome.setPreferredOrientations([
-              //   DeviceOrientation.landscapeRight,
-              //   DeviceOrientation.landscapeLeft,
-              // ]);
-            },
-            child: Icon(
-              Icons.fullscreen,
-              color: Colors.white,
-            ),
+        ControllerButton(
+          child: Icon(
+            Icons.fullscreen,
+            color: Colors.white,
           ),
+          url: url,
+          function: () {
+            // print(SystemChrome.restoreSystemUIOverlays());
+
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => VideoFullScreen(
+                          url: url,
+                        )));
+            // SystemChrome.setPreferredOrientations([
+            //   DeviceOrientation.landscapeRight,
+            //   DeviceOrientation.landscapeLeft,
+            // ]);
+          },
         ),
-        Container(
-          color: Colors.pink,
-          width: 50,
-          height: 50,
+        ControllerButton(
           child: Icon(
             Icons.loop,
             color: Colors.white,
           ),
+          url: url,
+          function: () {
+            print(_controller.value.isLooping);
+            var a = _controller.value.isLooping;
+            _controller.setLooping(!a);
+            print(_controller.value.isLooping);
+          },
         ),
         Container(
           width: 50,
@@ -200,6 +203,27 @@ class PlayerOptionsBar extends StatelessWidget {
           ]),
         ),
       ],
+    );
+  }
+}
+
+//////////////////////////////////////////////////////////////
+class ControllerButton extends StatelessWidget {
+  const ControllerButton(
+      {Key key, @required this.url, @required this.function, this.child})
+      : super(key: key);
+
+  final String url;
+  final Function function;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.amber,
+      width: 50,
+      height: 50,
+      child: GestureDetector(onTap: function, child: child),
     );
   }
 }
@@ -233,10 +257,19 @@ class PlayerScreen extends StatelessWidget {
               // Use the VideoPlayer widget to display the video.
               child: VideoPlayer(_controller),
             );
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            // If the VideoPlayerController is still initializing, show a
+            // loading spinner.
+            return Center(child: Text("waiting"));
+          } else if (snapshot.connectionState == ConnectionState.none) {
+            // If the VideoPlayerController is still initializing, show a
+            // loading spinner.
+            return Center(child: Text("none"));
           } else {
             // If the VideoPlayerController is still initializing, show a
             // loading spinner.
-            return Center(child: CircularProgressIndicator());
+            return Center(child: Icon(MaterialIcons.update));
+            //  Center(child: CircularProgressIndicator());
           }
         },
       ),

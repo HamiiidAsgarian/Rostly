@@ -170,13 +170,20 @@ class _ProgressSliderState extends State<ProgressSlider> {
     return ValueListenableBuilder(
       valueListenable: widget.controller,
       builder: (context, VideoPlayerValue value, child) {
-        print((value.position.hashCode / 1000000).round());
+        widget.controller.value.isLooping == true
+            ? print("looping")
+            : print("not looping");
+        print(
+            "${(value.position.hashCode / 1000000).round()} out of ${((widget.controller.value.duration.hashCode / 1000000).round()).toDouble()} ");
+
         return Slider(
           // value: _controller.value.position.hashCode.round() / 1000000,
           // value: _currentSliderValue,
           value: widget.controller.value.position.hashCode.round() / 1000000,
           min: 0,
-          max: widget.controller.value.duration.hashCode / 1000000,
+          max: (((widget.controller.value.duration.hashCode / 1000000))
+              .round()
+              .toDouble()),
           divisions: (1000),
           label: _currentSliderValueDuration.toString().split('.')[0],
           onChangeStart: (e) {

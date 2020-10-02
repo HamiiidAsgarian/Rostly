@@ -20,7 +20,7 @@ class _SearchScreen2State extends State<SearchScreen2> {
   List respondedDialogsList = [];
 
   String _videoPlayerURL =
-      "https://static.videezy.com/system/resources/previews/000/049/581/original/testtube.mp4";
+      "https://miro.medium.com/max/880/0*H3jZONKqRuAAeHnG.jpg";
   UniqueKey _urlKey;
   var currentVideoItem;
   @override
@@ -81,22 +81,39 @@ class _SearchScreen2State extends State<SearchScreen2> {
                       ))
                 ],
               ),
-              VideoPlayerScreen(
-                url: _videoPlayerURL,
-                key: _urlKey,
+              Expanded(
+                child: VideoPlayerScreen(
+                  url: _videoPlayerURL,
+                  key: _urlKey,
+                ),
               ),
             ],
           )),
-          RaisedButton(onPressed: () {
-            if (int.parse(currentVideoItem['id']) <
-                respondedDialogsList.length - 1) {
-              setState(() {
-                changeUrl(
-                  respondedDialogsList[int.parse(currentVideoItem['id']) + 1],
-                );
-              });
-            }
-          }),
+          RaisedButton(
+              child: Icon(Icons.skip_next),
+              onPressed: () {
+                if (int.parse(currentVideoItem['id']) <
+                    respondedDialogsList.length - 1) {
+                  setState(() {
+                    changeUrl(
+                      respondedDialogsList[
+                          int.parse(currentVideoItem['id']) + 1],
+                    );
+                  });
+                }
+              }),
+          RaisedButton(
+              child: Icon(Icons.skip_previous),
+              onPressed: () {
+                if (int.parse(currentVideoItem['id']) > 0) {
+                  setState(() {
+                    changeUrl(
+                      respondedDialogsList[
+                          int.parse(currentVideoItem['id']) - 1],
+                    );
+                  });
+                }
+              }),
           Expanded(
             child: ListView(
               children: [
