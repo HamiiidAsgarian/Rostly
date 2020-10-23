@@ -2,15 +2,17 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:rostly/screens/videoFullScreen.dart';
 import 'package:rostly/widgets/originalPlayerWidgets.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPlayerScreen extends StatefulWidget {
   final String url;
+  final Function next;
+  final Function previous;
   // final UniqueKey uniqueKey;
 
-  VideoPlayerScreen({this.url, Key key}) : super(key: key);
+  VideoPlayerScreen({this.url, Key key, this.next, this.previous})
+      : super(key: key);
   @override
   _VideoPlayerScreenState createState() => _VideoPlayerScreenState();
 }
@@ -84,19 +86,14 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
           child: Visibility(
             visible: videoOptionsVisibility,
             child: PlayerOptions(
-              controller: _controller,
-              functionPrevious: () {
-                print("previous");
-              },
-              function: () {
-                setState(() {
-                  videoOptionsVisibility = !videoOptionsVisibility;
-                });
-              },
-              functionNext: () {
-                print("next");
-              },
-            ),
+                controller: _controller,
+                functionPrevious: widget.previous,
+                function: () {
+                  setState(() {
+                    videoOptionsVisibility = !videoOptionsVisibility;
+                  });
+                },
+                functionNext: widget.next),
           ),
         ),
         Positioned.fill(
@@ -110,9 +107,11 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     );
   }
 }
-//////////////////**************************************////////////////////////// */
 
-class PlayerOptionsBar extends StatelessWidget {
+//////////////////**************************************////////////////////////// */
+class PlayerOptionsBar extends StatefulWidget {
+  @override
+  _PlayerOptionsBarState createState() => _PlayerOptionsBarState();
   const PlayerOptionsBar({
     this.url,
     Key key,
@@ -122,8 +121,15 @@ class PlayerOptionsBar extends StatelessWidget {
 
   final VideoPlayerController _controller;
   final String url;
+}
+
+class _PlayerOptionsBarState extends State<PlayerOptionsBar> {
+  IconData playIconStatus = Icons.play_arrow;
+
   @override
   Widget build(BuildContext context) {
+    ProgressSlider slider = new ProgressSlider(controller: widget._controller);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -132,16 +138,31 @@ class PlayerOptionsBar extends StatelessWidget {
           color: Colors.orange,
           width: 50,
           height: 50,
-          child: Icon(
-            Icons.play_arrow,
-            color: Colors.white,
+          child: GestureDetector(
+            onTap: () {
+              if (widget._controller.value.isPlaying) {
+                widget._controller.pause();
+                setState(() {
+                  playIconStatus = Icons.play_arrow;
+                });
+              } else {
+                widget._controller.play();
+                setState(() {
+                  playIconStatus = Icons.pause;
+                });
+              }
+            },
+            child: Icon(
+              playIconStatus,
+              color: Colors.white,
+            ),
           ),
         ),
         Expanded(
           flex: 5,
           child: Container(
             child: ProgressSlider(
-              controller: _controller,
+              controller: widget._controller,
             ),
             height: 50,
             color: Colors.green.withOpacity(0.8),
@@ -152,16 +173,17 @@ class PlayerOptionsBar extends StatelessWidget {
             Icons.fullscreen,
             color: Colors.white,
           ),
-          url: url,
+          url: widget.url,
           function: () {
             // print(SystemChrome.restoreSystemUIOverlays());
 
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) => VideoFullScreen(
-                          url: url,
-                        )));
+            // Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (BuildContext context) => VideoFullScreen(
+            //               url: widget.url,
+            //             )));
+
             // SystemChrome.setPreferredOrientations([
             //   DeviceOrientation.landscapeRight,
             //   DeviceOrientation.landscapeLeft,
@@ -173,12 +195,12 @@ class PlayerOptionsBar extends StatelessWidget {
             Icons.loop,
             color: Colors.white,
           ),
-          url: url,
+          url: widget.url,
           function: () {
-            print(_controller.value.isLooping);
-            var a = _controller.value.isLooping;
-            _controller.setLooping(!a);
-            print(_controller.value.isLooping);
+            print(widget._controller.value.isLooping);
+            var a = widget._controller.value.isLooping;
+            widget._controller.setLooping(!a);
+            print(widget._controller.value.isLooping);
           },
         ),
         Container(
@@ -188,7 +210,7 @@ class PlayerOptionsBar extends StatelessWidget {
           child: Column(children: [
             Expanded(
               child: VolumeSlider(
-                controller: _controller,
+                controller: widget._controller,
               ),
             ),
             Container(
@@ -278,3 +300,93 @@ class PlayerScreen extends StatelessWidget {
 }
 
 ///////////////////*********************************************************//////////////////////////
+class ProgressSlider extends StatefulWidget {
+  final controller;
+  var status;
+  ProgressSlider({this.controller});
+
+  @override
+  _ProgressSliderState createState() => _ProgressSliderState();
+}
+
+class _ProgressSliderState extends State<ProgressSlider> {
+  Duration _currentSliderValueDuration;
+
+  String sliderValueStaus;
+
+  @override
+  Widget build(BuildContext context) {
+    // double durationToSecond(Duration time) {
+    //   double hour = time.inHours / 3600;
+    //   double minute = time.inMinutes / 60;
+    //   double second = time.inSeconds.toDouble();
+
+    //   // print(hour + minute + second);
+    //   return (hour + minute + second);
+    // }
+
+    Duration secondToDuration(seconds) {
+      int hours = (seconds / 3600).toInt();
+      int rowMinute = (seconds % 3600).toInt();
+      int minutes = (rowMinute ~/ 60);
+      int rowSeconds = (rowMinute % 60).toInt();
+      Duration zz =
+          Duration(hours: hours, minutes: minutes, seconds: rowSeconds);
+      // print("$hours : $minutes : $rowSeconds");
+      // print(zz);
+
+      return (zz);
+    }
+
+    return ValueListenableBuilder(
+      valueListenable: widget.controller,
+      builder: (context, VideoPlayerValue value, child) {
+        widget.controller.value.isLooping == true
+            ? print("looping")
+            : print("not looping");
+        print(
+            "${(value.position.hashCode / 1000000).round().toDouble()} out of ${((widget.controller.value.duration.hashCode / 1000000).round()).toDouble()} ");
+        if ((value.position.hashCode / 1000000).round().toDouble() ==
+            ((widget.controller.value.duration.hashCode / 1000000).round())
+                .toDouble()) {
+          print("the end");
+        } else
+          print("still running");
+
+        return Slider(
+          // value: _controller.value.position.hashCode.round() / 1000000,
+          // value: _currentSliderValue,
+          value: (widget.controller.value.position.hashCode.round() / 1000000)
+              .toDouble(),
+          min: 0,
+          max: (((widget.controller.value.duration.hashCode / 1000000))
+              .round()
+              .toDouble()),
+          divisions: (1000),
+          label: _currentSliderValueDuration.toString().split('.')[0],
+          onChangeStart: (e) {
+            setState(() {
+              sliderValueStaus = "changing";
+            });
+          },
+          onChanged: (double e) {
+            setState(() {
+              // _currentSliderValue = e;
+              _currentSliderValueDuration = secondToDuration(e);
+              Duration destinationTime = secondToDuration(e);
+              widget.controller.seekTo(destinationTime);
+            });
+          },
+          onChangeEnd: (e) {
+            setState(() {
+              // _currentSliderValue = e;
+            });
+            Duration destinationTime = secondToDuration(e);
+            widget.controller.seekTo(destinationTime);
+            widget.controller.play();
+          },
+        );
+      },
+    );
+  }
+}

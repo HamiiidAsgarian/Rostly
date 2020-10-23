@@ -82,38 +82,69 @@ class _SearchScreen2State extends State<SearchScreen2> {
                 ],
               ),
               Expanded(
-                child: VideoPlayerScreen(
-                  url: _videoPlayerURL,
-                  key: _urlKey,
-                ),
+                child: Stack(children: [
+                  VideoPlayerScreen(
+                      url: _videoPlayerURL,
+                      key: _urlKey,
+                      previous: () {
+                        if (int.parse(currentVideoItem['id']) > 0) {
+                          setState(() {
+                            changeUrl(
+                              respondedDialogsList[
+                                  int.parse(currentVideoItem['id']) - 1],
+                            );
+                          });
+                        }
+                      },
+                      next: () {
+                        if (int.parse(currentVideoItem['id']) <
+                            respondedDialogsList.length - 1) {
+                          setState(() {
+                            changeUrl(
+                              respondedDialogsList[
+                                  int.parse(currentVideoItem['id']) + 1],
+                            );
+                          });
+                        }
+                      }),
+                  // Center(
+                  //   child: Row(
+                  //       mainAxisAlignment: MainAxisAlignment.center,
+                  //       crossAxisAlignment: CrossAxisAlignment.center,
+                  //       children: [
+                  //         RaisedButton(
+                  //             child: Icon(Icons.skip_previous),
+                  //             onPressed: () {
+                  //               if (int.parse(currentVideoItem['id']) > 0) {
+                  //                 setState(() {
+                  //                   changeUrl(
+                  //                     respondedDialogsList[
+                  //                         int.parse(currentVideoItem['id']) -
+                  //                             1],
+                  //                   );
+                  //                 });
+                  //               }
+                  //             }),
+                  //         RaisedButton(
+                  //             child: Icon(Icons.skip_next),
+                  //             onPressed: () {
+                  //               if (int.parse(currentVideoItem['id']) <
+                  //                   respondedDialogsList.length - 1) {
+                  //                 setState(() {
+                  //                   changeUrl(
+                  //                     respondedDialogsList[
+                  //                         int.parse(currentVideoItem['id']) +
+                  //                             1],
+                  //                   );
+                  //                 });
+                  //               }
+                  //             }),
+                  //       ]),
+                  // ),
+                ]),
               ),
             ],
           )),
-          RaisedButton(
-              child: Icon(Icons.skip_next),
-              onPressed: () {
-                if (int.parse(currentVideoItem['id']) <
-                    respondedDialogsList.length - 1) {
-                  setState(() {
-                    changeUrl(
-                      respondedDialogsList[
-                          int.parse(currentVideoItem['id']) + 1],
-                    );
-                  });
-                }
-              }),
-          RaisedButton(
-              child: Icon(Icons.skip_previous),
-              onPressed: () {
-                if (int.parse(currentVideoItem['id']) > 0) {
-                  setState(() {
-                    changeUrl(
-                      respondedDialogsList[
-                          int.parse(currentVideoItem['id']) - 1],
-                    );
-                  });
-                }
-              }),
           Expanded(
             child: ListView(
               children: [

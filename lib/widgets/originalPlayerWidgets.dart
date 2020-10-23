@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 // import 'package:flutter_icons/flutter_icons.dart';
-import 'package:video_player/video_player.dart';
+// import 'package:video_player/video_player.dart';
 
 class PlayerOptions extends StatefulWidget {
   PlayerOptions(
@@ -126,89 +126,5 @@ class _VolumeSliderState extends State<VolumeSlider> {
                 widget.controller.setVolume(e);
               }),
         ));
-  }
-}
-
-class ProgressSlider extends StatefulWidget {
-  final controller;
-
-  ProgressSlider({this.controller});
-
-  @override
-  _ProgressSliderState createState() => _ProgressSliderState();
-}
-
-class _ProgressSliderState extends State<ProgressSlider> {
-  Duration _currentSliderValueDuration;
-
-  String sliderValueStaus;
-
-  @override
-  Widget build(BuildContext context) {
-    // double durationToSecond(Duration time) {
-    //   double hour = time.inHours / 3600;
-    //   double minute = time.inMinutes / 60;
-    //   double second = time.inSeconds.toDouble();
-
-    //   // print(hour + minute + second);
-    //   return (hour + minute + second);
-    // }
-
-    Duration secondToDuration(seconds) {
-      int hours = (seconds / 3600).toInt();
-      int rowMinute = (seconds % 3600).toInt();
-      int minutes = (rowMinute ~/ 60);
-      int rowSeconds = (rowMinute % 60).toInt();
-      Duration zz =
-          Duration(hours: hours, minutes: minutes, seconds: rowSeconds);
-      // print("$hours : $minutes : $rowSeconds");
-      // print(zz);
-
-      return (zz);
-    }
-
-    return ValueListenableBuilder(
-      valueListenable: widget.controller,
-      builder: (context, VideoPlayerValue value, child) {
-        widget.controller.value.isLooping == true
-            ? print("looping")
-            : print("not looping");
-        print(
-            "${(value.position.hashCode / 1000000).round()} out of ${((widget.controller.value.duration.hashCode / 1000000).round()).toDouble()} ");
-
-        return Slider(
-          // value: _controller.value.position.hashCode.round() / 1000000,
-          // value: _currentSliderValue,
-          value: widget.controller.value.position.hashCode.round() / 1000000,
-          min: 0,
-          max: (((widget.controller.value.duration.hashCode / 1000000))
-              .round()
-              .toDouble()),
-          divisions: (1000),
-          label: _currentSliderValueDuration.toString().split('.')[0],
-          onChangeStart: (e) {
-            setState(() {
-              sliderValueStaus = "changing";
-            });
-          },
-          onChanged: (double e) {
-            setState(() {
-              // _currentSliderValue = e;
-              _currentSliderValueDuration = secondToDuration(e);
-              Duration destinationTime = secondToDuration(e);
-              widget.controller.seekTo(destinationTime);
-            });
-          },
-          onChangeEnd: (e) {
-            setState(() {
-              // _currentSliderValue = e;
-            });
-            Duration destinationTime = secondToDuration(e);
-            widget.controller.seekTo(destinationTime);
-            widget.controller.play();
-          },
-        );
-      },
-    );
   }
 }
